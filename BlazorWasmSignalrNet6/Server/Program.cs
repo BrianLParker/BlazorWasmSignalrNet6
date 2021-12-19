@@ -1,9 +1,13 @@
+using BlazorWasmSignalrNet6.Server;
 using BlazorWasmSignalrNet6.Server.Data;
 using BlazorWasmSignalrNet6.Server.Hubs;
 using BlazorWasmSignalrNet6.Server.Models;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +27,11 @@ builder.Services.AddAuthentication()
     .AddIdentityServerJwt();
 
 builder.Services.AddSignalR();
+
+builder.Services.TryAddEnumerable(
+    ServiceDescriptor.Singleton<IPostConfigureOptions<JwtBearerOptions>,
+    ConfigureJwtBearerOptions>());
+
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 builder.Services.AddResponseCompression(configureOptions =>
