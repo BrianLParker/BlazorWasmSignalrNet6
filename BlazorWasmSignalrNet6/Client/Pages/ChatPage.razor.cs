@@ -6,16 +6,17 @@ namespace BlazorWasmSignalrNet6.Client.Pages;
 
 public partial class ChatPage : IAsyncDisposable
 {
+    private HubConnection? hubConnection;
+    private List<string> messages = new List<string>();
+    private string? userInput;
+    private string? messageInput;
+
     [Inject]
     private NavigationManager? NavigationManager { get; set; }
 
     [Inject]
     public IAccessTokenProvider? AccessTokenProvider { get; set; }
 
-    private HubConnection? hubConnection;
-    private List<string> messages = new List<string>();
-    private string? userInput;
-    private string? messageInput;
     protected override async Task OnInitializedAsync()
     {
         hubConnection = new HubConnectionBuilder()
@@ -49,6 +50,7 @@ public partial class ChatPage : IAsyncDisposable
     }
 
     public bool IsConnected => hubConnection?.State == HubConnectionState.Connected;
+
     public async ValueTask DisposeAsync()
     {
         if (hubConnection is not null)

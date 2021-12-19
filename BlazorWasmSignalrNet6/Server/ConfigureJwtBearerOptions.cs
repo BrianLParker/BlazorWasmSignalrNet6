@@ -17,7 +17,7 @@ public class ConfigureJwtBearerOptions : IPostConfigureOptions<JwtBearerOptions>
 
                 var accessToken = context.Request.Query["access_token"];
                 var requestPath = context.HttpContext.Request.Path;
-                var endPoint = $"/chathub";
+                var endPoint = "/chathub";
 
                 if (!string.IsNullOrEmpty(accessToken) &&
                     requestPath.StartsWithSegments(endPoint))
