@@ -1,4 +1,5 @@
 using BlazorWasmSignalrNet6.Server.Data;
+using BlazorWasmSignalrNet6.Server.Hubs;
 using BlazorWasmSignalrNet6.Server.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.ResponseCompression;
@@ -23,9 +24,15 @@ builder.Services.AddAuthentication()
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+builder.Services.AddResponseCompression(configureOptions =>
+{
+    configureOptions.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
+        new[] { "application/octet-stream" });
+});
 
 var app = builder.Build();
 
+app.UseResponseCompression();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -53,6 +60,7 @@ app.UseAuthorization();
 
 app.MapRazorPages();
 app.MapControllers();
+app.MapHub<ChatHub>(pattern: "/chathub");
 app.MapFallbackToFile("index.html");
 
 app.Run();
